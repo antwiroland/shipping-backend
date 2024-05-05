@@ -6,11 +6,16 @@ const ShippmentSchema = new mongoose.Schema({
   currentLocation: { type: String, required: true },
   destination: { type: String, required: true },
   address: { type: String, required: true },
+  paymentAmount: { type: String, required: true },
   weight: { type: String, required: true },
   trackingId: { type: String, required: true },
   status: {
     type: String,
     enum: ["new", "processing", "in-transit", "on-hold", "delivered"],
+  },
+  paymentStatus: {
+    type: String,
+    enum: ["paid", "pending-payment"],
   },
   remarks: { type: String, required: true },
 });

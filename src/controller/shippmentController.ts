@@ -17,7 +17,6 @@ const trackingShippment = async (req: Request, res: Response) => {
   }
 };
 
-
 const getShippment = async (req: Request, res: Response) => {
   try {
     const shippment = await Shippment.find();
@@ -72,6 +71,25 @@ const updateShippmentStatus = async (req: Request, res: Response) => {
   }
 };
 
+const updateShippmentPaymentStatus = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { paymentStatus } = req.body;
+    const shippment = await Shippment.findById(id);
+    if (!shippment) {
+      return res
+        .status(404)
+        .json({ message: "Shippment with give id not found" });
+    }
+    shippment.paymentStatus = paymentStatus;
+    await shippment.save();
+
+    res.status(200).json(shippment);
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
 const updateShippment = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -81,6 +99,7 @@ const updateShippment = async (req: Request, res: Response) => {
       address,
       currentLocation,
       destination,
+      paymentAmount,
       weight,
       remarks,
       trackingId,
@@ -98,11 +117,12 @@ const updateShippment = async (req: Request, res: Response) => {
     shippment.address = address;
     shippment.currentLocation = currentLocation;
     shippment.destination = destination;
+    shippment.paymentAmount = paymentAmount;
     shippment.weight = weight;
     shippment.trackingId = trackingId;
     shippment.remarks = remarks;
     await shippment.save();
-    
+
     res.status(200).json(shippment);
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
@@ -132,4 +152,5 @@ export default {
   updateShippment,
   getSingleShippment,
   trackingShippment,
+  updateShippmentPaymentStatus,
 };
